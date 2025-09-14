@@ -14,7 +14,7 @@ terraform {
   #   resource_group_name  = "rg-devopsinsiders"
   #   storage_account_name = "twostates"
   #   container_name       = "tfstate"
-  #   key                  = "dev.tfstate"
+  #   key                  = "prod.tfstate"
   # }
 }
 
