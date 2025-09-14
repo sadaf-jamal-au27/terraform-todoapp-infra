@@ -17,3 +17,4 @@ variable "api_server_authorized_ip_ranges" {
   default     = ["0.0.0.0/0"] # Default to allow all, should be restricted in production
 }
 
+
