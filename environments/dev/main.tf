@@ -54,7 +54,7 @@ module "sql_server" {
   location                      = "centralindia"
   admin_username                = "devopsadmin"
   admin_password                = var.sql_admin_password
-  public_network_access_enabled = true  # Allow public access for dev
+  public_network_access_enabled = true # Allow public access for dev
   tags                          = local.common_tags
 }
 
@@ -67,26 +67,17 @@ module "sql_db" {
   tags        = local.common_tags
 }
 
-module "log_analytics" {
-  depends_on     = [module.rg]
-  source         = "../../modules/azurerm_log_analytics_workspace"
-  workspace_name = "law-dev-todoapp"
-  location       = "centralindia"
-  rg_name        = "rg-dev-todoapp"
-  tags           = local.common_tags
-}
 
 module "aks" {
-  depends_on                     = [module.rg, module.log_analytics]
-  source                         = "../../modules/azurerm_kubernetes_cluster"
-  aks_name                       = "aks-dev-todoapp"
-  location                       = "centralindia"
-  rg_name                        = "rg-dev-todoapp"
-  dns_prefix                     = "aks-dev-todoapp"
-  vm_size                        = "Standard_B2s"
-  api_server_authorized_ip_ranges = ["0.0.0.0/0"]  # Allow all for dev, restrict in prod
-  log_analytics_workspace_id     = module.log_analytics.workspace_id
-  tags                           = local.common_tags
+  depends_on                      = [module.rg]
+  source                          = "../../modules/azurerm_kubernetes_cluster"
+  aks_name                        = "aks-dev-todoapp"
+  location                        = "centralindia"
+  rg_name                         = "rg-dev-todoapp"
+  dns_prefix                      = "aks-dev-todoapp"
+  vm_size                         = "Standard_B2s"
+  api_server_authorized_ip_ranges = ["0.0.0.0/0"] # Allow all for dev, restrict in prod
+  tags                            = local.common_tags
 }
 
 

@@ -54,7 +54,7 @@ module "sql_server" {
   location                      = "centralindia"
   admin_username                = "devopsadmin"
   admin_password                = var.sql_admin_password
-  public_network_access_enabled = false  # Disable public access for production
+  public_network_access_enabled = false # Disable public access for production
   tags                          = local.common_tags
 }
 
@@ -67,27 +67,17 @@ module "sql_db" {
   tags        = local.common_tags
 }
 
-module "log_analytics" {
-  depends_on     = [module.rg]
-  source         = "../../modules/azurerm_log_analytics_workspace"
-  workspace_name = "law-prod-todoapp"
-  location       = "centralindia"
-  rg_name        = "rg-prod-todoapp"
-  retention_in_days = 90  # Longer retention for production
-  tags           = local.common_tags
-}
 
 module "aks" {
-  depends_on                     = [module.rg, module.log_analytics]
-  source                         = "../../modules/azurerm_kubernetes_cluster"
-  aks_name                       = "aks-prod-todoapp"
-  location                       = "centralindia"
-  rg_name                        = "rg-prod-todoapp"
-  dns_prefix                     = "aks-prod-todoapp"
-  vm_size                        = "Standard_D2s_v3"
-  api_server_authorized_ip_ranges = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]  # Restrict to private IPs
-  log_analytics_workspace_id     = module.log_analytics.workspace_id
-  tags                           = local.common_tags
+  depends_on                      = [module.rg]
+  source                          = "../../modules/azurerm_kubernetes_cluster"
+  aks_name                        = "aks-prod-todoapp"
+  location                        = "centralindia"
+  rg_name                         = "rg-prod-todoapp"
+  dns_prefix                      = "aks-prod-todoapp"
+  vm_size                         = "Standard_D2s_v3"
+  api_server_authorized_ip_ranges = ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"] # Restrict to private IPs
+  tags                            = local.common_tags
 }
 
 module "pip" {

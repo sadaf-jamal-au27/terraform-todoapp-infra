@@ -10,13 +10,5 @@ resource "azurerm_mssql_server" "sql_server" {
   # Security: Disable public network access
   public_network_access_enabled = var.public_network_access_enabled
 
-  # Security: Enable extended audit policy
-  extended_auditing_policy {
-    storage_endpoint                        = var.audit_storage_endpoint
-    storage_account_access_key              = var.audit_storage_access_key
-    storage_account_access_key_is_secondary = false
-    retention_in_days                       = var.audit_retention_days
-  }
-
   tags = var.tags
 }

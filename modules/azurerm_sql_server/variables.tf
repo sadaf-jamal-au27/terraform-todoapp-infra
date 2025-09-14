@@ -11,22 +11,3 @@ variable "public_network_access_enabled" {
   type        = bool
   default     = false
 }
-
-variable "audit_storage_endpoint" {
-  description = "Storage endpoint for SQL server audit logs"
-  type        = string
-  default     = null
-}
-
-variable "audit_storage_access_key" {
-  description = "Storage access key for SQL server audit logs"
-  type        = string
-  default     = null
-  sensitive   = true
-}
-
-variable "audit_retention_days" {
-  description = "Number of days to retain audit logs"
-  type        = number
-  default     = 90
-}
