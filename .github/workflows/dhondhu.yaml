@@ -34,9 +34,12 @@ jobs:
         uses: Azure/login@v2.3.0
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: true
+          environment: AzureCloud
+          allow-no-subscriptions: false
+          audience: api://AzureADTokenExchange
             
       - name: Code Formatting Check
         id: fmt
@@ -89,9 +92,12 @@ jobs:
         uses: Azure/login@v2.3.0
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}   
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: true
+          environment: AzureCloud
+          allow-no-subscriptions: false
+          audience: api://AzureADTokenExchange   
           
       - name: Initialize Terraform
         id: init
@@ -136,9 +142,12 @@ jobs:
         uses: Azure/login@v2.3.0
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: true
+          environment: AzureCloud
+          allow-no-subscriptions: false
+          audience: api://AzureADTokenExchange
           
       - name: Initialize Terraform
         id: init
