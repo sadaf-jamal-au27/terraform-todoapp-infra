@@ -33,7 +33,10 @@ jobs:
       - name: Azure Login
         uses: Azure/login@v2.3.0
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
             
       - name: Code Formatting Check
         id: fmt
@@ -85,7 +88,10 @@ jobs:
       - name: Azure Login
         uses: Azure/login@v2.3.0
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}   
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}   
           
       - name: Initialize Terraform
         id: init
@@ -129,7 +135,10 @@ jobs:
       - name: Azure Login
         uses: Azure/login@v2.3.0
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           
       - name: Initialize Terraform
         id: init
