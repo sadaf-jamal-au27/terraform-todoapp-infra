@@ -25,6 +25,7 @@ permissions:
   
 jobs: 
   infrastructure-plan:
+    runs-on: ubuntu-latest
     steps: 
       - name: Checkout
         uses: actions/checkout@v5.0.0
@@ -71,6 +72,7 @@ jobs:
             });    
         
   infrastructure-deploy:
+    runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     needs: infrastructure-plan
     environment: dev
@@ -113,6 +115,7 @@ jobs:
         working-directory: environments/dev
         
   infrastructure-destroy:
+    runs-on: ubuntu-latest
     if: github.event.inputs.action == 'destroy' || (github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch')
     environment: dev
     steps:
