@@ -1,4 +1,4 @@
-name: "TodoApp Infrastructure Pipeline"
+name: "Infrastructure Deployment Pipeline"
 
 on:
   pull_request:
@@ -24,8 +24,7 @@ permissions:
   contents: read
   
 jobs: 
-  terraform-init-plan:
-    runs-on: sadaf-runner
+  infrastructure-plan:
     steps: 
       - name: Checkout
         uses: actions/checkout@v5.0.0
@@ -33,23 +32,23 @@ jobs:
       - name: Azure Login
         uses: Azure/login@v2.3.0
             
-      - name: Terraform fmt
+      - name: Code Formatting Check
         id: fmt
         run: terraform fmt -check
         continue-on-error: true
         working-directory: environments/dev
         
-      - name: Terraform Init
+      - name: Initialize Terraform
         id: init
         run: terraform init -input=false  
         working-directory: environments/dev
 
-      - name: Terraform Validate
+      - name: Validate Configuration
         id: validate
         run: terraform validate -no-color
         working-directory: environments/dev        
       
-      - name: Terraform Plan
+      - name: Plan Infrastructure Changes
         id: plan
         run: |
           terraform plan -no-color -input=false -out=tfplan
@@ -71,10 +70,9 @@ jobs:
               body: `## Terraform Plan Results\n\`\`\`\n${plan}\n\`\`\``
             });    
         
-  terraform-apply:    
-    runs-on: sadaf-runner
+  infrastructure-deploy:
     if: github.ref == 'refs/heads/main'
-    needs: terraform-init-plan
+    needs: infrastructure-plan
     environment: dev
     steps:
       - name: Checkout
@@ -83,12 +81,12 @@ jobs:
       - name: Azure Login
         uses: Azure/login@v2.3.0   
           
-      - name: Terraform Init
+      - name: Initialize Terraform
         id: init
         run: terraform init -input=false  
         working-directory: environments/dev
 
-      - name: Terraform Apply
+      - name: Deploy Infrastructure
         id: apply
         run: |
           terraform apply --auto-approve
@@ -114,8 +112,7 @@ jobs:
           echo "3. Configure SQL database connections" >> $GITHUB_STEP_SUMMARY
         working-directory: environments/dev
         
-  terraform-destroy:
-    runs-on: sadaf-runner
+  infrastructure-destroy:
     if: github.event.inputs.action == 'destroy' || (github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch')
     environment: dev
     steps:
@@ -125,12 +122,12 @@ jobs:
       - name: Azure Login
         uses: Azure/login@v2.3.0
           
-      - name: Terraform Init
+      - name: Initialize Terraform
         id: init
         run: terraform init -input=false  
         working-directory: environments/dev
 
-      - name: Terraform Destroy
+      - name: Destroy Infrastructure
         id: destroy
         run: |
           terraform destroy --auto-approve
