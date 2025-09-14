@@ -6,6 +6,23 @@ locals {
   }
 }
 
+# Variables for sensitive data
+variable "sql_admin_password" {
+  description = "SQL Server administrator password"
+  type        = string
+  sensitive   = true
+  default     = "P@ssw01rd@123"
+}
+
+# Random ID for unique naming
+resource "random_id" "acr_suffix" {
+  byte_length = 4
+}
+
+resource "random_id" "sql_suffix" {
+  byte_length = 4
+}
+
 module "rg" {
   source      = "../../modules/azurerm_resource_group"
   rg_name     = "rg-dev-todoapp"
@@ -23,7 +40,7 @@ module "rg1" {
 module "acr" {
   depends_on = [module.rg]
   source     = "../../modules/azurerm_container_registry"
-  acr_name   = "acrdevtodoapp"
+  acr_name   = "acrdevtodoapp${random_id.acr_suffix.hex}"
   rg_name    = "rg-dev-todoapp"
   location   = "centralindia"
   tags       = local.common_tags
@@ -32,11 +49,11 @@ module "acr" {
 module "sql_server" {
   depends_on      = [module.rg]
   source          = "../../modules/azurerm_sql_server"
-  sql_server_name = "sql-dev-todoapp"
+  sql_server_name = "sql-dev-todoapp-${random_id.sql_suffix.hex}"
   rg_name         = "rg-dev-todoapp"
   location        = "centralindia"
   admin_username  = "devopsadmin"
-  admin_password  = "P@ssw01rd@123"
+  admin_password  = var.sql_admin_password
   tags            = local.common_tags
 }
 
@@ -56,6 +73,7 @@ module "aks" {
   location   = "centralindia"
   rg_name    = "rg-dev-todoapp"
   dns_prefix = "aks-dev-todoapp"
+  vm_size    = "Standard_B2s"
   tags       = local.common_tags
 }
 
@@ -65,6 +83,6 @@ module "pip" {
   pip_name = "pip-dev-todoapp"
   rg_name  = "rg-dev-todoapp"
   location = "centralindia"
-  sku      = "Basic"
+  sku      = "Standard"
   tags     = local.common_tags
 }
